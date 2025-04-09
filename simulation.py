@@ -71,24 +71,30 @@ def main():
         a_frequency = st.number_input("Frequency (Hz)", value=20000.0)
         a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=0.1)
 
-    if st.button("Run Simulation"):
-        try:
-            lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
-            delta_arr = np.array([float(x) for x in a_delta.strip().split()])
+if st.button("Run Simulation"):
+    try:
+        st.write("Parsing lambda and delta values...")
+        lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
+        delta_arr = np.array([float(x) for x in a_delta.strip().split()])
 
-            results = my_simulation.get_results(format='array')
-            st.write("Simulation results raw:", results)
-          
-            fig = run_simulation(
-                a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
-                a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
-                a_lambda=lambda_arr, a_delta=delta_arr,
-                a_duration=a_duration, a_frequency=a_frequency,
-                a_noise=a_noise
-            )
+        st.write("Lambda:", lambda_arr)
+        st.write("Delta:", delta_arr)
+        st.write("Running simulation...")
+
+        fig = run_simulation(
+            a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
+            a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
+            a_lambda=lambda_arr, a_delta=delta_arr,
+            a_duration=a_duration, a_frequency=a_frequency,
+            a_noise=a_noise
+        )
+
+        if fig is not None:
             st.pyplot(fig)
-        except Exception as e:
-            st.error(f"Simulation failed: {e}")
+
+    except Exception as e:
+        st.error(f"Simulation failed: {e}")
+
 
 if __name__ == "__main__":
     main()
