@@ -8,7 +8,6 @@ sys.path.append('../')
 from Bearing_defect_simulation.DES.Simulation import Simulation
 from Bearing_defect_simulation.Bearing.Bearing import Bearing
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
-from your_simulation_file import Simulation  # Import your Simulation class
 
 def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
                    a_dB:float, a_theta:float, a_L:float, a_N:int,
