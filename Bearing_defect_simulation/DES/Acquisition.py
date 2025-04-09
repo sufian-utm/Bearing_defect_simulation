@@ -1,6 +1,7 @@
 import sys
 import math
 import numpy as np
+import streamlit as st
 from typing import Tuple
 
 class Acquisition(object):
@@ -33,16 +34,37 @@ class Acquisition(object):
         return (frequencies, abs(fourierTransform))
 
     def get_info(self):
-        """Print information about the acquisition parameters."""
-        print("################# ACQUISITION PARAM  ############## ")
-        print("#")
-        print(f"#  Duration: {self.m_duration}s")
-        print(f"#  Frequency: {self.m_frequency}Hz")
-        print(f"#  Time resolution: {round(1000000 * self.m_dt) / 1000000}s")
-        print(f"#  Number of signal's points: {self.m_waveform_len}")
-        print("#")
+        """Display information about the acquisition parameters using Streamlit."""
+        st.write("################# ACQUISITION PARAM  ############## ")
+        st.write(f"Duration: {self.m_duration}s")
+        st.write(f"Frequency: {self.m_frequency}Hz")
+        st.write(f"Time resolution: {round(1000000 * self.m_dt) / 1000000}s")
+        st.write(f"Number of signal's points: {self.m_waveform_len}")
+        st.write("################# END ############################ ")
 
     def debug_waveform(self):
         """Print some debugging information about the waveform."""
-        print(f"Waveform sample data (first 10 points): {self.m_waveform[:10]}")
-        print(f"Waveform last 10 points: {self.m_waveform[-10:]}")
+        st.write(f"Waveform sample data (first 10 points): {self.m_waveform[:10]}")
+        st.write(f"Waveform last 10 points: {self.m_waveform[-10:]}")
+
+    def plot_waveform(self):
+        """Plot the time-domain waveform using Streamlit."""
+        fig, ax = plt.subplots()
+        ax.plot(np.arange(self.m_waveform_len) * self.m_dt, self.m_waveform)
+        ax.set_title("Time Domain Waveform")
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("Amplitude")
+        st.pyplot(fig)
+
+    def plot_spectrum(self):
+        """Plot the frequency-domain spectrum using Streamlit."""
+        if self.m_spectrum.size == 0:
+            st.write("Error: Spectrum is empty. Please compute FFT first.")
+        else:
+            freq, spectrum = self.m_spectrum
+            fig, ax = plt.subplots()
+            ax.plot(freq, spectrum)
+            ax.set_title("Frequency Domain Spectrum")
+            ax.set_xlabel("Frequency (Hz)")
+            ax.set_ylabel("Amplitude")
+            st.pyplot(fig)
