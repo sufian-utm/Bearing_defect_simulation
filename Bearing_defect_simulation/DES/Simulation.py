@@ -121,4 +121,3 @@ class Simulation:
         st.write("Simulation created")
         st.write("Number of balls to pass on the defect: " + str(self.m_n_ball_to_pass))
         st.write("######################################################## ")
-
