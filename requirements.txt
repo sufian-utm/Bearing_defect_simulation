@@ -1,0 +1,15 @@
+streamlit
+numpy
+pandas
+matplotlib
+scikit-learn
+joblib
+xgboost
+lightgbm
+tqdm
+requests
+beautifulsoup4
+lxml
+openpyxl
+pyarrow
+fastparquet
