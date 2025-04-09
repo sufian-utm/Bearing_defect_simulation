@@ -29,7 +29,7 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
         my_simulation = Simulation(my_bearing, my_acquisition)
         my_simulation.start()
 
-        results = my_simulation.get_results(format='as_graph')
+        results = my_simulation.get_results(format='show')
         if results is None or len(results) != 2:
             st.error("Simulation returned invalid results.")
             return None
