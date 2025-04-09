@@ -82,8 +82,8 @@ def main():
                 a_lambda, a_delta,
                 a_duration, a_frequency, a_noise
             )
-            if fig:
-                st.pyplot(fig)
+            #if fig:
+            #    st.pyplot(fig)
 
         except Exception as e:
             st.error(f"Simulation failed outside: {e}")
