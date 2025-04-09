@@ -73,34 +73,36 @@ class Simulation:
         self.m_acquisition.m_waveform += noise
         st.write("Simulation completed in {:.4f}s.".format(time.time() - time_start))
 
-    def get_results(self, format='show', file_name='results.png', title="Simulated Spectrum"):
-        # Get the FFT and plot the results
-        fft_res = self.m_acquisition.get_fft()
-        x = fft_res[0][:int(self.m_acquisition.m_frequency / 10)]
-        y = fft_res[1][:int(self.m_acquisition.m_frequency / 10)]
+def get_results(self, format='show', file_name='results.png', title="Simulated Spectrum"):
+    t = np.linspace(0, self.m_acquisition.m_duration, self.m_acquisition.m_waveform_len)
+    x = self.m_acquisition.m_waveform
+    fft_res = self.m_acquisition.get_fft()
+    freqs = fft_res[0][:int(self.m_acquisition.m_frequency / 10)]
+    amps = fft_res[1][:int(self.m_acquisition.m_frequency / 10)]
 
-        if format == 'show':
-            st.write(title)
-            fig, ax = plt.subplots()
-            ax.plot(x, y, color='red')
-            ax.set_title(title)
-            ax.set_xlabel("Freq (Hz)")
-            ax.set_ylabel("Amplitude")
-            st.pyplot(fig)
+    if format == 'show':
+        st.write(title)
+        fig, ax = plt.subplots()
+        ax.plot(freqs, amps, color='red')
+        ax.set_title(title)
+        ax.set_xlabel("Freq (Hz)")
+        ax.set_ylabel("Amplitude")
+        st.pyplot(fig)
+        return
 
-        elif format == 'as_array':
-            st.write("Output formatted as array:")
-            st.write(self.m_acquisition.m_spectrum)
+    elif format == 'as_array' or format == 'array':
+        return t, x
 
-        elif format == 'as_file':
-            st.write('Output formatted as file')
-            plt.figure()
-            plt.plot(x, y)
-            plt.savefig(file_name)
-            st.write(f"Results saved as {file_name}")
+    elif format == 'as_file':
+        plt.figure()
+        plt.plot(freqs, amps)
+        plt.savefig(file_name)
+        st.write(f"Results saved as {file_name}")
+        return
 
-        else:
-            st.write("Err: format unknown")
+    else:
+        st.write("Err: format unknown")
+        return None
 
     def get_info(self):
         self.m_bearing.get_info()
