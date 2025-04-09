@@ -76,6 +76,9 @@ def main():
             lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
             delta_arr = np.array([float(x) for x in a_delta.strip().split()])
 
+            results = my_simulation.get_results(format='array')
+            st.write("Simulation results raw:", results)
+          
             fig = run_simulation(
                 a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
                 a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
