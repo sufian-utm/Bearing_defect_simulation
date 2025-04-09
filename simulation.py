@@ -29,14 +29,16 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
     my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
 
-    # Try getting results safely
     try:
         results = my_simulation.get_results(format='array')
         if results is None or len(results) != 2:
             st.error("Simulation returned invalid results.")
             return None
-
+        
         t, x = results
+        
+        st.write(f"Results (time): {t[:10]}")  # Print first 10 values to inspect
+        st.write(f"Results (signal): {x[:10]}")  # Print first 10 values to inspect
 
         fig, ax = plt.subplots()
         ax.plot(t, x, linewidth=1)
