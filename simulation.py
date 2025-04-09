@@ -14,7 +14,7 @@ def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
                    a_lambda:np.ndarray, a_delta:np.ndarray,
                    a_duration:float, a_frequency:float, a_noise:float):
     """
-    Run the simulation and return matplotlib figure
+    Run the simulation and return a matplotlib figure
     """
     my_bearing = Bearing(
         a_n=a_n, a_dP=a_dP, a_race=a_race,
@@ -31,8 +31,13 @@ def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
     my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
 
-    # Extract time and signal manually if get_results doesn't return fig
-    t, x = my_simulation.get_results(format='array')  # You might need to change this line depending on API
+    # Instead of relying on get_results, directly access attributes
+    t = my_simulation.time
+    x = my_simulation.signal
+
+    if t is None or x is None:
+        raise ValueError("Simulation did not generate time or signal data.")
+
     fig, ax = plt.subplots()
     ax.plot(t, x, linewidth=1)
     ax.set_title("Simulated Bearing Vibration Signal")
