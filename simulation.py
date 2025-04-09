@@ -1,113 +1,74 @@
 import sys
 import numpy as np
+import streamlit as st
+
 sys.path.append('../')
 from Bearing_defect_simulation.DES.Simulation import Simulation
 from Bearing_defect_simulation.Bearing.Bearing import Bearing
 from Bearing_defect_simulation.Bearing.RollingElement import RollingElement
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
+import matplotlib.pyplot as plt
 
-import argparse
+def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
+                   a_dB:float, a_theta:float, a_L:float, a_N:int,
+                   a_lambda:np.ndarray, a_delta:np.ndarray,
+                   a_duration:float, a_frequency:float, a_noise:float):
+    """
+    Run the simulation and return results
+    """
+    my_bearing = Bearing(
+        a_n=a_n, a_dP=a_dP, a_race=a_race,
+        a_rpm=a_rpm, a_dB=a_dB, a_theta=a_theta,
+        a_L=a_L, a_N=a_N, a_lambda=a_lambda, a_delta=a_delta
+    )
 
-def main(a_n:int=16,a_dP:float=71.501,a_race:str='outer',
-            a_rpm:int=2000,a_dB:float=8.4074,a_theta:float=15.17,
-            a_L:float=3.8,a_N:int=5,
-            a_lambda:np.ndarray=[0.7,0.7,0.8,0.8,0.8],
-            a_delta:np.ndarray=[0.5,0,0.5,0,0.7],
-            a_duration:float=1,a_frequency:float=20000,a_noise:float=0.1):
-    """
-    Main function of the simulation engine
-    """
-    # Check that the defect exists
-    if(a_lambda==None):
-        a_lambda=np.array([0.7,0.7,0.8,0.8,0.8])
-    if(a_delta==None):
-        a_delta=np.array([0.5,0,0.5,0,0.7])
-    # Create the Bearing
-    my_bearing=Bearing(a_n=a_n,a_dP=a_dP,a_race=a_race,
-            a_rpm=a_rpm,a_dB=a_dB,a_theta=a_theta,
-            a_L=a_L,a_N=a_N,a_lambda=a_lambda,a_delta=a_delta)
-    # Create an Acquisition
-    my_acquisition=Acquisition(a_duration=a_duration,a_frequency=a_frequency,
-            a_noise=a_noise)
-    # Create a simulation
-    my_simulation=Simulation(my_bearing,my_acquisition)
-    # Start a simulation 
+    my_acquisition = Acquisition(
+        a_duration=a_duration,
+        a_frequency=a_frequency,
+        a_noise=a_noise
+    )
+
+    my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
-    # Display the results
-    my_simulation.get_results(format='show')
+
+    # Get and return results
+    return my_simulation.get_results(format='plot')
 
 
+def main():
+    st.title("Bearing Defect Vibration Simulation")
 
-def invoke_parser():
-    """
-    Command line argument parser
-    """
+    with st.sidebar:
+        st.header("Simulation Parameters")
+        a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=16)
+        a_dP = st.number_input("Pitch diameter (dP) [mm]", value=71.501)
+        a_race = st.selectbox("Defect on race", options=["inner", "outer"], index=1)
+        a_rpm = st.number_input("Rotational speed (rpm)", value=2000)
+        a_dB = st.number_input("Rolling element diameter (dB) [mm]", value=8.4074)
+        a_theta = st.number_input("Contact angle (θ) [deg]", value=15.17)
+        a_L = st.number_input("Defect length (L) [mm]", value=3.8)
+        a_N = st.number_input("Number of intervals (N)", min_value=1, value=5)
+        a_lambda = st.text_input("Defect lengths (λ) [space-separated]", value="0.7 0.7 0.8 0.8 0.8")
+        a_delta = st.text_input("Defect depths (δ) [space-separated]", value="0.5 0 0.5 0 0.7")
+        a_duration = st.number_input("Duration (s)", value=1.0)
+        a_frequency = st.number_input("Frequency (Hz)", value=20000.0)
+        a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=0.1)
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--n", nargs='?', type=int,default='16',
-        help="The Number of rolling element in the bearing."
-    )
-    parser.add_argument(
-        "--dP", nargs='?', type=float,default='71.501',
-        help="The Pitch Diameter of the bearing (mm)."
-    )
-    parser.add_argument(
-        "--race", nargs='?', type=str,default='outer',
-        help="The race affected by the defect, can be 'inner' or 'outer'."
-    )
-    parser.add_argument(
-        "--rpm", nargs='?', type=int,default='2000',
-        help="The rotational speed of the bearing (rpm)"
-    )
-    parser.add_argument(
-        "--dB", nargs='?', type=float,default='8.4074',
-        help="The Rolling Element Diameter (mm)."
-    )
-    parser.add_argument(
-        "--theta", nargs='?', type=float,default='15.17',
-        help="The contact angle of the bearing (deg)."
-    )
-    parser.add_argument(
-        "--L", nargs='?', type=float,default='3.8',
-        help="The length of the defect (mm)."
-    )
-    parser.add_argument(
-        "--N", nargs='?', type=int,default='5',
-        help="The number of interval of the defect."
-    )
-    parser.add_argument(
-        "--a_lambda", nargs='+',
-        help="The different lengths of the intervals representing the defect (mm)."
-    )
-    parser.add_argument(
-        "--a_delta", nargs='+',
-        help="The different depths of the intervals representing the defect (mm)."
-    )
-    parser.add_argument(
-        "--duration", nargs='?', type=float,default='1',
-        help="The duration of the simulation (s)."
-    )
-    parser.add_argument(
-        "--frequency", nargs='?', type=float,default='20000',
-        help="The time resolution of the simulation (Hz)."
-    )
-    parser.add_argument(
-        "--noise", nargs='?', type=float,default='0.1',
-        help="The ratio of noise added in the simulation (between 0.0 and 0.9)."
-    )
-
-    return parser
-
-if __name__ == '__main__':
-    parser = invoke_parser()
-    FLAGS = parser.parse_args()  # parses the command line argument
-    main(a_n=FLAGS.n,a_dP=FLAGS.dP,a_race=FLAGS.race,
-            a_rpm=FLAGS.rpm,a_dB=FLAGS.dB,a_theta=FLAGS.theta,
-            a_L=FLAGS.L,a_N=FLAGS.N,
-            a_lambda=np.array(FLAGS.a_lambda),
-            a_delta=np.array(FLAGS.a_delta),
-            a_duration=FLAGS.duration,
-            a_frequency=FLAGS.frequency,
-            a_noise=FLAGS.noise,
+    if st.button("Run Simulation"):
+        try:
+            lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
+            delta_arr = np.array([float(x) for x in a_delta.strip().split()])
+            
+            fig = run_simulation(
+                a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
+                a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
+                a_lambda=lambda_arr, a_delta=delta_arr,
+                a_duration=a_duration, a_frequency=a_frequency,
+                a_noise=a_noise
             )
+            st.pyplot(fig)
+        except Exception as e:
+            st.error(f"Simulation failed: {e}")
+
+if __name__ == "__main__":
+    main()
