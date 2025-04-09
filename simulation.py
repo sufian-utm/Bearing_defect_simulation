@@ -1,20 +1,20 @@
 import sys
 import numpy as np
 import streamlit as st
+import matplotlib.pyplot as plt
 
 sys.path.append('../')
 from Bearing_defect_simulation.DES.Simulation import Simulation
 from Bearing_defect_simulation.Bearing.Bearing import Bearing
 from Bearing_defect_simulation.Bearing.RollingElement import RollingElement
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
-import matplotlib.pyplot as plt
 
-def run_simulation(a_n: int, a_dP: float, a_race: str, a_rpm: int,
-                   a_dB: float, a_theta: float, a_L: float, a_N: int,
-                   a_lambda: np.ndarray, a_delta: np.ndarray,
-                   a_duration: float, a_frequency: float, a_noise: float):
+def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
+                   a_dB:float, a_theta:float, a_L:float, a_N:int,
+                   a_lambda:np.ndarray, a_delta:np.ndarray,
+                   a_duration:float, a_frequency:float, a_noise:float):
     """
-    Run the simulation and return results
+    Run the simulation and return matplotlib figure
     """
     my_bearing = Bearing(
         a_n=a_n, a_dP=a_dP, a_race=a_race,
@@ -31,11 +31,19 @@ def run_simulation(a_n: int, a_dP: float, a_race: str, a_rpm: int,
     my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
 
-    # Get and return results (matplotlib figure)
-    return my_simulation.get_results(format='show')
+    # Extract time and signal manually if get_results doesn't return fig
+    t, x = my_simulation.get_results(format='array')  # You might need to change this line depending on API
+    fig, ax = plt.subplots()
+    ax.plot(t, x, linewidth=1)
+    ax.set_title("Simulated Bearing Vibration Signal")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Amplitude")
+    ax.grid(True)
+
+    return fig
 
 def main():
-    st.title("Bearing Defect Vibration Simulation")
+    st.title("🔧 Bearing Defect Vibration Simulation")
 
     with st.sidebar:
         st.header("Simulation Parameters")
@@ -57,7 +65,7 @@ def main():
         try:
             lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
             delta_arr = np.array([float(x) for x in a_delta.strip().split()])
-            
+
             fig = run_simulation(
                 a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
                 a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
@@ -65,7 +73,7 @@ def main():
                 a_duration=a_duration, a_frequency=a_frequency,
                 a_noise=a_noise
             )
-            st.pyplot(fig)  # Now this should work
+            st.pyplot(fig)
         except Exception as e:
             st.error(f"Simulation failed: {e}")
 
