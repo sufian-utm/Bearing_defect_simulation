@@ -35,12 +35,12 @@ class Acquisition(object):
 
     def get_info(self):
         """Display information about the acquisition parameters using Streamlit."""
-        st.write("################# ACQUISITION PARAM  ############## ")
-        st.write(f"Duration: {self.m_duration}s")
-        st.write(f"Frequency: {self.m_frequency}Hz")
-        st.write(f"Time resolution: {round(1000000 * self.m_dt) / 1000000}s")
-        st.write(f"Number of signal's points: {self.m_waveform_len}")
-        st.write("################# END ############################ ")
+        print("################# ACQUISITION PARAM  ############## ")
+        print(f"Duration: {self.m_duration}s")
+        print(f"Frequency: {self.m_frequency}Hz")
+        print(f"Time resolution: {round(1000000 * self.m_dt) / 1000000}s")
+        print(f"Number of signal's points: {self.m_waveform_len}")
+        print("################# END ############################ ")
 
     def debug_waveform(self):
         """Print some debugging information about the waveform."""
