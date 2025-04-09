@@ -13,33 +13,28 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
                    a_dB, a_theta, a_L, a_N,
                    a_lambda, a_delta,
                    a_duration, a_frequency, a_noise):
-
-    my_bearing = Bearing(
-        a_n=a_n, a_dP=a_dP, a_race=a_race,
-        a_rpm=a_rpm, a_dB=a_dB, a_theta=a_theta,
-        a_L=a_L, a_N=a_N, a_lambda=a_lambda, a_delta=a_delta
-    )
-
-    my_acquisition = Acquisition(
-        a_duration=a_duration,
-        a_frequency=a_frequency,
-        a_noise=a_noise
-    )
-
-    my_simulation = Simulation(my_bearing, my_acquisition)
-    my_simulation.start()
-
     try:
+        my_bearing = Bearing(
+            a_n=a_n, a_dP=a_dP, a_race=a_race,
+            a_rpm=a_rpm, a_dB=a_dB, a_theta=a_theta,
+            a_L=a_L, a_N=a_N, a_lambda=a_lambda, a_delta=a_delta
+        )
+
+        my_acquisition = Acquisition(
+            a_duration=a_duration,
+            a_frequency=a_frequency,
+            a_noise=a_noise
+        )
+
+        my_simulation = Simulation(my_bearing, my_acquisition)
+        my_simulation.start()
+
         results = my_simulation.get_results(format='array')
         if results is None or len(results) != 2:
             st.error("Simulation returned invalid results.")
             return None
-        
-        t, x = results
-        
-        st.write(f"Results (time): {t[:10]}")  # Print first 10 values to inspect
-        st.write(f"Results (signal): {x[:10]}")  # Print first 10 values to inspect
 
+        t, x = results
         fig, ax = plt.subplots()
         ax.plot(t, x, linewidth=1)
         ax.set_title("Simulated Bearing Vibration Signal")
@@ -49,7 +44,7 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
         return fig
 
     except Exception as e:
-        st.error(f"Simulation failed: {e}")
+        st.error(f"Simulation failed inside run_simulation: {e}")
         return None
 
 def main():
@@ -65,36 +60,33 @@ def main():
         a_theta = st.number_input("Contact angle (θ) [deg]", value=15.17)
         a_L = st.number_input("Defect length (L) [mm]", value=3.8)
         a_N = st.number_input("Number of intervals (N)", min_value=1, value=5)
-        a_lambda = st.text_input("Defect lengths (λ) [space-separated]", value="0.7 0.7 0.8 0.8 0.8")
-        a_delta = st.text_input("Defect depths (δ) [space-separated]", value="0.5 0 0.5 0 0.7")
+        a_lambda_str = st.text_input("Defect lengths (λ) [space-separated]", value="0.7 0.7 0.8 0.8 0.8")
+        a_delta_str = st.text_input("Defect depths (δ) [space-separated]", value="0.5 0 0.5 0 0.7")
         a_duration = st.number_input("Duration (s)", value=1.0)
         a_frequency = st.number_input("Frequency (Hz)", value=20000.0)
         a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=0.1)
 
-if st.button("Run Simulation"):
-    try:
-        st.write("Parsing lambda and delta values...")
-        lambda_arr = np.array([float(x) for x in a_lambda.strip().split()])
-        delta_arr = np.array([float(x) for x in a_delta.strip().split()])
+    if st.button("Run Simulation"):
+        try:
+            # Safely parse and define these inside the button block
+            a_lambda = np.array([float(x) for x in a_lambda_str.strip().split()])
+            a_delta = np.array([float(x) for x in a_delta_str.strip().split()])
 
-        st.write("Lambda:", lambda_arr)
-        st.write("Delta:", delta_arr)
-        st.write("Running simulation...")
+            if len(a_lambda) != a_N or len(a_delta) != a_N:
+                st.error(f"Mismatch: Length of λ = {len(a_lambda)}, δ = {len(a_delta)}; but N = {a_N}")
+                return
 
-        fig = run_simulation(
-            a_n=a_n, a_dP=a_dP, a_race=a_race, a_rpm=a_rpm,
-            a_dB=a_dB, a_theta=a_theta, a_L=a_L, a_N=a_N,
-            a_lambda=lambda_arr, a_delta=delta_arr,
-            a_duration=a_duration, a_frequency=a_frequency,
-            a_noise=a_noise
-        )
+            fig = run_simulation(
+                a_n, a_dP, a_race, a_rpm,
+                a_dB, a_theta, a_L, a_N,
+                a_lambda, a_delta,
+                a_duration, a_frequency, a_noise
+            )
+            if fig:
+                st.pyplot(fig)
 
-        if fig is not None:
-            st.pyplot(fig)
-
-    except Exception as e:
-        st.error(f"Simulation failed: {e}")
-
+        except Exception as e:
+            st.error(f"Simulation failed outside: {e}")
 
 if __name__ == "__main__":
     main()
