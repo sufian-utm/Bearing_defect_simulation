@@ -11,33 +11,24 @@ from Bearing_defect_simulation.Bearing.RollingElement import RollingElement
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
 
 class Simulation:
-    """
-    The main simulation engine adapted for Streamlit.
-    """
-    def __init__(self, bearing:Bearing, acquisition:Acquisition):
-        # Calculate the number of balls passing the defect
+    def __init__(self, bearing: Bearing, acquisition: Acquisition):
         if bearing.m_outerRace:
             self.m_n_ball_to_pass = round(acquisition.m_duration * bearing.get_BPFO_freq())
         else:
             self.m_n_ball_to_pass = round(acquisition.m_duration * bearing.get_BPFI_freq())
 
-        # Create a list of balls passing the defect
         self.m_ballList = [RollingElement(bearing.m_dB, bearing.m_duration) for _ in range(self.m_n_ball_to_pass)]
         self.m_bearing = bearing
         self.m_acquisition = acquisition
         self.m_gamma = 10
-
-        # Start the simulation
-        self.m_waveform = np.zeros(acquisition.m_waveform.shape)  # Create waveform storage
+        self.m_waveform = np.zeros(acquisition.m_waveform.shape)
 
     def run_ball_through_defect(self, i: int, ball: RollingElement):
-        # Time in the simulation where the ball enters the defect region
         time_enter_defect = i * self.m_bearing.m_duration_between_ball
         time_exit_defect = time_enter_defect + ball.m_duration
         dx = self.m_acquisition.m_dt / ball.m_duration * self.m_bearing.m_defect.m_L
         dt = time_enter_defect
 
-        # Run until the ball leaves the defect region
         while dt < time_exit_defect:
             dt += self.m_acquisition.m_dt
             ball.advance(dx)
@@ -46,6 +37,12 @@ class Simulation:
                 amplitude = self.get_amplitude(ball, interval_underball)
                 position_in_array = self.get_position_pulse_in_waveform(time_enter_defect, dt)
                 self.m_waveform[position_in_array] = amplitude
+
+        # Debugging: Print the waveform's first few values after running a ball through the defect
+        if i == self.m_n_ball_to_pass - 1:
+            st.write("First 10 values of m_waveform after ball simulation:")
+            st.write(self.m_waveform[:10])
+            
         return 0
 
     def find_interval_under_ball(self, ball: RollingElement, j: int):
@@ -75,12 +72,14 @@ class Simulation:
         return int((dt / self.m_acquisition.m_dt))
 
     def start(self):
-        # Simulate the balls passing through the defect region
         time_start = time.time()
         for i, ball in enumerate(self.m_ballList):
             self.run_ball_through_defect(i, ball)
 
-        # Add noise
+        # Debugging: Check the final waveform data
+        st.write("Simulation completed. First 10 values of m_waveform:")
+        st.write(self.m_acquisition.m_waveform[:10])
+
         noise = np.random.normal(0, self.m_acquisition.m_noise * max(self.m_acquisition.m_waveform), self.m_acquisition.m_waveform.shape)
         self.m_acquisition.m_waveform += noise
         st.write("Simulation completed in {:.4f}s.".format(time.time() - time_start))
