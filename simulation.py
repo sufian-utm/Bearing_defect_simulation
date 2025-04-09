@@ -9,10 +9,10 @@ from Bearing_defect_simulation.Bearing.RollingElement import RollingElement
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
 import matplotlib.pyplot as plt
 
-def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
-                   a_dB:float, a_theta:float, a_L:float, a_N:int,
-                   a_lambda:np.ndarray, a_delta:np.ndarray,
-                   a_duration:float, a_frequency:float, a_noise:float):
+def run_simulation(a_n: int, a_dP: float, a_race: str, a_rpm: int,
+                   a_dB: float, a_theta: float, a_L: float, a_N: int,
+                   a_lambda: np.ndarray, a_delta: np.ndarray,
+                   a_duration: float, a_frequency: float, a_noise: float):
     """
     Run the simulation and return results
     """
@@ -31,9 +31,8 @@ def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
     my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
 
-    # Get and return results
-    return my_simulation.get_results(format='plot')
-
+    # Get and return results (matplotlib figure)
+    return my_simulation.get_results(format='show')
 
 def main():
     st.title("Bearing Defect Vibration Simulation")
@@ -66,7 +65,7 @@ def main():
                 a_duration=a_duration, a_frequency=a_frequency,
                 a_noise=a_noise
             )
-            st.pyplot(fig)
+            st.pyplot(fig)  # Now this should work
         except Exception as e:
             st.error(f"Simulation failed: {e}")
 
