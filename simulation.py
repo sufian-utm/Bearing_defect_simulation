@@ -9,13 +9,11 @@ from Bearing_defect_simulation.Bearing.Bearing import Bearing
 from Bearing_defect_simulation.Bearing.RollingElement import RollingElement
 from Bearing_defect_simulation.DES.Acquisition import Acquisition
 
-def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
-                   a_dB:float, a_theta:float, a_L:float, a_N:int,
-                   a_lambda:np.ndarray, a_delta:np.ndarray,
-                   a_duration:float, a_frequency:float, a_noise:float):
-    """
-    Run the simulation and return a matplotlib figure
-    """
+def run_simulation(a_n, a_dP, a_race, a_rpm,
+                   a_dB, a_theta, a_L, a_N,
+                   a_lambda, a_delta,
+                   a_duration, a_frequency, a_noise):
+
     my_bearing = Bearing(
         a_n=a_n, a_dP=a_dP, a_race=a_race,
         a_rpm=a_rpm, a_dB=a_dB, a_theta=a_theta,
@@ -31,21 +29,26 @@ def run_simulation(a_n:int, a_dP:float, a_race:str, a_rpm:int,
     my_simulation = Simulation(my_bearing, my_acquisition)
     my_simulation.start()
 
-    # Instead of relying on get_results, directly access attributes
-    t = my_simulation.time
-    x = my_simulation.signal
+    # Try getting results safely
+    try:
+        results = my_simulation.get_results(format='array')
+        if results is None or len(results) != 2:
+            st.error("Simulation returned invalid results.")
+            return None
 
-    if t is None or x is None:
-        raise ValueError("Simulation did not generate time or signal data.")
+        t, x = results
 
-    fig, ax = plt.subplots()
-    ax.plot(t, x, linewidth=1)
-    ax.set_title("Simulated Bearing Vibration Signal")
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Amplitude")
-    ax.grid(True)
+        fig, ax = plt.subplots()
+        ax.plot(t, x, linewidth=1)
+        ax.set_title("Simulated Bearing Vibration Signal")
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("Amplitude")
+        ax.grid(True)
+        return fig
 
-    return fig
+    except Exception as e:
+        st.error(f"Simulation failed: {e}")
+        return None
 
 def main():
     st.title("🔧 Bearing Defect Vibration Simulation")
