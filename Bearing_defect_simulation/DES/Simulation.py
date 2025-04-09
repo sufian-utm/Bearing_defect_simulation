@@ -36,13 +36,7 @@ class Simulation:
             if interval_underball:
                 amplitude = self.get_amplitude(ball, interval_underball)
                 position_in_array = self.get_position_pulse_in_waveform(time_enter_defect, dt)
-                self.m_waveform[position_in_array] = amplitude
-
-        # Debugging: Print the waveform's first few values after running a ball through the defect
-        if i == self.m_n_ball_to_pass - 1:
-            st.write("First 10 values of m_waveform after ball simulation:")
-            st.write(self.m_waveform[:10])
-            
+                self.m_waveform[position_in_array] = amplitude           
         return 0
 
     def find_interval_under_ball(self, ball: RollingElement, j: int):
@@ -75,11 +69,6 @@ class Simulation:
         time_start = time.time()
         for i, ball in enumerate(self.m_ballList):
             self.run_ball_through_defect(i, ball)
-
-        # Debugging: Check the final waveform data
-        st.write("Simulation completed. First 10 values of m_waveform:")
-        st.write(self.m_acquisition.m_waveform[:10])
-
         noise = np.random.normal(0, self.m_acquisition.m_noise * max(self.m_acquisition.m_waveform), self.m_acquisition.m_waveform.shape)
         self.m_acquisition.m_waveform += noise
         st.write("Simulation completed in {:.4f}s.".format(time.time() - time_start))
