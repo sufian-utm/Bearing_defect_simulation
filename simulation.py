@@ -141,11 +141,20 @@ def main():
                 scipy.io.savemat(buf_mat, {"time": t, "signal": x})
                 np.save(buf_npy, data)
 
-                # Prepare for download
-                st.download_button("📥 Download CSV", buf_csv.getvalue(), "signal.csv", "text/csv")
-                st.download_button("📥 Download TXT", buf_txt.getvalue(), "signal.txt", "text/plain")
-                st.download_button("📥 Download MAT", buf_mat.getvalue(), "signal.mat", "application/octet-stream")
-                st.download_button("📥 Download NPY", buf_npy.getvalue(), "signal.npy", "application/octet-stream")
+                # Prepare for download buttons in one row
+                col1, col2, col3, col4 = st.columns(4)
+
+                with col1:
+                    st.download_button("📥 CSV", buf_csv.getvalue(), "signal.csv", "text/csv")
+
+                with col2:
+                    st.download_button("📥 TXT", buf_txt.getvalue(), "signal.txt", "text/plain")
+
+                with col3:
+                    st.download_button("📥 MAT", buf_mat.getvalue(), "signal.mat", "application/octet-stream")
+
+                with col4:
+                    st.download_button("📥 NPY", buf_npy.getvalue(), "signal.npy", "application/octet-stream")
 
         except Exception as e:
             st.error(f"Simulation failed outside: {e}")
