@@ -84,7 +84,7 @@ def main():
         # Dataset preset selector
         st.header("Select Dataset Preset")
         dataset = st.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
-        preset = presets.get(dataset, preset)
+        preset = presets[dataset] if dataset in presets else preset
         st.header("Simulation Parameters")
         a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
         a_dP = st.number_input("Pitch diameter (dP) [mm]", value=preset["a_dP"])
@@ -118,6 +118,29 @@ def main():
             )
             if fig:
                 st.pyplot(fig)
+
+                # Combine time and signal
+                data = np.column_stack((t, x))
+
+                # File buffers
+                buf_csv = io.StringIO()
+                buf_txt = io.StringIO()
+                buf_mat = io.BytesIO()
+                buf_npy = io.BytesIO()
+
+                # Save CSV and TXT
+                pd.DataFrame(data, columns=["Time", "Amplitude"]).to_csv(buf_csv, index=False)
+                np.savetxt(buf_txt, data, header="Time Amplitude", comments='')
+
+                # Save MAT and NPY
+                scipy.io.savemat(buf_mat, {"time": t, "signal": x})
+                np.save(buf_npy, data)
+
+                # Prepare for download
+                st.download_button("📥 Download CSV", buf_csv.getvalue(), "signal.csv", "text/csv")
+                st.download_button("📥 Download TXT", buf_txt.getvalue(), "signal.txt", "text/plain")
+                st.download_button("📥 Download MAT", buf_mat.getvalue(), "signal.mat", "application/octet-stream")
+                st.download_button("📥 Download NPY", buf_npy.getvalue(), "signal.npy", "application/octet-stream")
 
         except Exception as e:
             st.error(f"Simulation failed outside: {e}")
