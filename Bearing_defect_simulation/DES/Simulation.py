@@ -114,7 +114,8 @@ class Simulation(object):
             ax.set_xlabel("Freq (Hz)")
             ax.set_ylabel("Amplitude")
             st.pyplot(fig)
-
+            return np.linspace(0, self.m_acquisition.m_duration, self.m_acquisition.m_waveform_len), \
+                   self.m_acquisition.m_waveform
         else:
             st.error("Err: Unknown format in get_results()")
 
