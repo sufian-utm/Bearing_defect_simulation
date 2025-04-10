@@ -120,6 +120,7 @@ def main():
                 st.pyplot(fig)
 
             if results:
+                t, x = results
                 # Combine time and signal
                 data = np.column_stack((t, x))
 
