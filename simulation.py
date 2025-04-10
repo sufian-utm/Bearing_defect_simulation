@@ -33,15 +33,15 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
         if results is None or len(results) != 2:
             st.error("Simulation returned invalid results.")
             return None
-
-        t, x = results
-        fig, ax = plt.subplots()
-        ax.plot(t, x, linewidth=1)
-        ax.set_title("Simulated Bearing Vibration Signal")
-        ax.set_xlabel("Time (s)")
-        ax.set_ylabel("Amplitude")
-        ax.grid(True)
-        return fig
+        else:
+            t, x = results
+            fig, ax = plt.subplots()
+            ax.plot(t, x, linewidth=1)
+            ax.set_title("Simulated Bearing Vibration Signal")
+            ax.set_xlabel("Time (s)")
+            ax.set_ylabel("Amplitude")
+            ax.grid(True)
+            return fig, results
 
     except Exception as e:
         st.error(f"Simulation failed inside run_simulation: {e}")
@@ -110,7 +110,7 @@ def main():
                 st.error(f"Mismatch: Length of λ = {len(a_lambda)}, δ = {len(a_delta)}; but N = {a_N}")
                 return
 
-            fig = run_simulation(
+            fig, results = run_simulation(
                 a_n, a_dP, a_race, a_rpm,
                 a_dB, a_theta, a_L, a_N,
                 a_lambda, a_delta,
@@ -119,6 +119,7 @@ def main():
             if fig:
                 st.pyplot(fig)
 
+            if results:
                 # Combine time and signal
                 data = np.column_stack((t, x))
 
