@@ -50,21 +50,57 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
 def main():
     st.title("🔧 Bearing Defect Vibration Simulation")
 
+    # Dataset preset selector
+    st.sidebar.header("Select Dataset Preset")
+    dataset = st.sidebar.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
+
+    # Define presets
+    presets = {
+        "CWRU": {
+            "a_n": 9, "a_dP": 71.5, "a_race": "outer", "a_rpm": 1772,
+            "a_dB": 8.4074, "a_theta": 15.0, "a_L": 3.8, "a_N": 3,
+            "a_lambda": "0.7 0.7 0.7", "a_delta": "0.5 0.5 0.5",
+            "a_duration": 1.0, "a_frequency": 12000.0, "a_noise": 0.05
+        },
+        "NASA": {
+            "a_n": 8, "a_dP": 50.0, "a_race": "inner", "a_rpm": 2000,
+            "a_dB": 7.0, "a_theta": 15.0, "a_L": 3.0, "a_N": 4,
+            "a_lambda": "0.6 0.7 0.6 0.7", "a_delta": "0.4 0.4 0.5 0.5",
+            "a_duration": 1.0, "a_frequency": 20000.0, "a_noise": 0.1
+        },
+        "Paderborn": {
+            "a_n": 16, "a_dP": 100.0, "a_race": "outer", "a_rpm": 1500,
+            "a_dB": 10.0, "a_theta": 20.0, "a_L": 4.0, "a_N": 5,
+            "a_lambda": "0.8 0.8 0.8 0.8 0.8", "a_delta": "0.3 0.4 0.5 0.6 0.7",
+            "a_duration": 1.0, "a_frequency": 64000.0, "a_noise": 0.1
+        }
+    }
+
+    if dataset != "Custom":
+        preset = presets[dataset]
+    else:
+        preset = {
+            "a_n": 16, "a_dP": 71.501, "a_race": "outer", "a_rpm": 2000,
+            "a_dB": 8.4074, "a_theta": 15.17, "a_L": 3.8, "a_N": 5,
+            "a_lambda": "0.7 0.7 0.8 0.8 0.8", "a_delta": "0.5 0 0.5 0 0.7",
+            "a_duration": 1.0, "a_frequency": 48000.0, "a_noise": 0.1
+        }
+
     with st.sidebar:
         st.header("Simulation Parameters")
-        a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=16)
-        a_dP = st.number_input("Pitch diameter (dP) [mm]", value=71.501)
-        a_race = st.selectbox("Defect on race", options=["inner", "outer"], index=1)
-        a_rpm = st.number_input("Rotational speed (rpm)", value=2000)
-        a_dB = st.number_input("Rolling element diameter (dB) [mm]", value=8.4074)
-        a_theta = st.number_input("Contact angle (θ) [deg]", value=15.17)
-        a_L = st.number_input("Defect length (L) [mm]", value=3.8)
-        a_N = st.number_input("Number of intervals (N)", min_value=1, value=5)
-        a_lambda_str = st.text_input("Defect lengths (λ) [space-separated]", value="0.7 0.7 0.8 0.8 0.8")
-        a_delta_str = st.text_input("Defect depths (δ) [space-separated]", value="0.5 0 0.5 0 0.7")
-        a_duration = st.number_input("Duration (s)", value=1.0)
-        a_frequency = st.number_input("Frequency (Hz)", value=48000.0)
-        a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=0.1)
+        a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
+        a_dP = st.number_input("Pitch diameter (dP) [mm]", value=preset["a_dP"])
+        a_race = st.selectbox("Defect on race", options=["inner", "outer"], index=0 if preset["a_race"] == "inner" else 1)
+        a_rpm = st.number_input("Rotational speed (rpm)", value=preset["a_rpm"])
+        a_dB = st.number_input("Rolling element diameter (dB) [mm]", value=preset["a_dB"])
+        a_theta = st.number_input("Contact angle (θ) [deg]", value=preset["a_theta"])
+        a_L = st.number_input("Defect length (L) [mm]", value=preset["a_L"])
+        a_N = st.number_input("Number of intervals (N)", min_value=1, value=preset["a_N"])
+        a_lambda_str = st.text_input("Defect lengths (λ) [space-separated]", value=preset["a_lambda"])
+        a_delta_str = st.text_input("Defect depths (δ) [space-separated]", value=preset["a_delta"])
+        a_duration = st.number_input("Duration (s)", value=preset["a_duration"])
+        a_frequency = st.number_input("Frequency (Hz)", value=preset["a_frequency"])
+        a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=preset["a_noise"])
 
     if st.button("Run Simulation"):
         try:
