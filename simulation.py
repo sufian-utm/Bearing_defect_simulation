@@ -50,10 +50,6 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
 def main():
     st.title("🔧 Bearing Defect Vibration Simulation")
 
-    # Dataset preset selector
-    st.sidebar.header("Select Dataset Preset")
-    dataset = st.sidebar.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
-
     # Define presets
     presets = {
         "CWRU": {
@@ -87,6 +83,11 @@ def main():
         }
 
     with st.sidebar:
+      
+        # Dataset preset selector
+        st.header("Select Dataset Preset")
+        dataset = st.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
+
         st.header("Simulation Parameters")
         a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
         a_dP = st.number_input("Pitch diameter (dP) [mm]", value=preset["a_dP"])
