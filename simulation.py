@@ -55,19 +55,19 @@ def main():
         "CWRU": {
             "a_n": 9, "a_dP": 71.5, "a_race": "outer", "a_rpm": 1772,
             "a_dB": 8.4074, "a_theta": 15.0, "a_L": 3.8, "a_N": 3,
-            "a_lambda": "0.7 0.7 0.7", "a_delta": "0.5 0.5 0.5",
+            "a_lambda": "0.18 0.18 0.18", "a_delta": "0.28 0 0.28",
             "a_duration": 1.0, "a_frequency": 12000.0, "a_noise": 0.05
         },
         "NASA": {
             "a_n": 8, "a_dP": 50.0, "a_race": "inner", "a_rpm": 2000,
             "a_dB": 7.0, "a_theta": 15.0, "a_L": 3.0, "a_N": 4,
-            "a_lambda": "0.6 0.7 0.6 0.7", "a_delta": "0.4 0.4 0.5 0.5",
+            "a_lambda": "0.6 0.7 0.6 0.7", "a_delta": "0 0.4 0 0.5",
             "a_duration": 1.0, "a_frequency": 20000.0, "a_noise": 0.1
         },
         "Paderborn": {
             "a_n": 16, "a_dP": 100.0, "a_race": "outer", "a_rpm": 1500,
             "a_dB": 10.0, "a_theta": 20.0, "a_L": 4.0, "a_N": 5,
-            "a_lambda": "0.8 0.8 0.8 0.8 0.8", "a_delta": "0.3 0.4 0.5 0.6 0.7",
+            "a_lambda": "0.8 0.8 0.8 0.8 0.8", "a_delta": "0.3 0 0 0.6 0.7",
             "a_duration": 1.0, "a_frequency": 64000.0, "a_noise": 0.1
         }
     }
