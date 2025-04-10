@@ -42,11 +42,7 @@ class Bearing(object):
         #   I have only created that to reflect the reality of a Rolling Element
         #   bearing, and in case we don't want all the ball to be the same
         #   for example we can image a ball to be smaller than the others
-        self.m_ballList=[RollingElement(a_dB,self.m_duration) \
-                for i in range(self.m_n)]
-        for i in range(self.m_n):
-            self.m_ballList.append(RollingElement(a_dB,self.m_duration))
-
+        self.m_ballList = [RollingElement(a_dB, self.m_duration) for i in range(self.m_n)]
         self.m_defect=Defect(a_L,a_N,a_lambda,a_delta)
         self.m_theta=a_theta*math.pi/180 # The contact
         self.m_duration_between_ball=1/self.get_BPFO_freq()
