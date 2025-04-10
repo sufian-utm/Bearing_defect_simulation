@@ -28,8 +28,8 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
 
         my_simulation = Simulation(my_bearing, my_acquisition)
         my_simulation.start()
-
         results = my_simulation.get_results(format='show')
+      
         if results is None or len(results) != 2:
             st.error("Simulation returned invalid results.")
             return None
@@ -63,7 +63,7 @@ def main():
         a_lambda_str = st.text_input("Defect lengths (λ) [space-separated]", value="0.7 0.7 0.8 0.8 0.8")
         a_delta_str = st.text_input("Defect depths (δ) [space-separated]", value="0.5 0 0.5 0 0.7")
         a_duration = st.number_input("Duration (s)", value=1.0)
-        a_frequency = st.number_input("Frequency (Hz)", value=20000.0)
+        a_frequency = st.number_input("Frequency (Hz)", value=48000.0)
         a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=0.1)
 
     if st.button("Run Simulation"):
@@ -82,8 +82,8 @@ def main():
                 a_lambda, a_delta,
                 a_duration, a_frequency, a_noise
             )
-            #if fig:
-            #    st.pyplot(fig)
+            if fig:
+                st.pyplot(fig)
 
         except Exception as e:
             st.error(f"Simulation failed outside: {e}")
