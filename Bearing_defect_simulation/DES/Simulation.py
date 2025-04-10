@@ -18,7 +18,7 @@ class Simulation(object):
     The main simulation engine
     """
     def __init__(self, bearing: Bearing, acquisition: Acquisition):
-        if bearing.m_outerRace:
+        if bearing.outer:
             self.m_n_ball_to_pass = round(acquisition.m_duration * bearing.get_BPFO_freq())
         else:
             self.m_n_ball_to_pass = round(acquisition.m_duration * bearing.get_BPFI_freq())
