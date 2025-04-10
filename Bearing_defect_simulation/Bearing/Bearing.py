@@ -24,6 +24,8 @@ class Bearing(object):
         self.m_n=a_n # The number of rolling element
         self.m_dP=a_dP # The pitch diameter of the bearing
         self.m_dB=a_dB # The diameter of the rolling element 
+        self.m_outerRace = False
+        self.m_innerRace = False
         if a_race=='inner':
             self.m_innerRace=True # True if working on the outer race
         elif a_race=='outer':
