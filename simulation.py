@@ -72,10 +72,7 @@ def main():
         }
     }
 
-    if dataset != "Custom":
-        preset = presets[dataset]
-    else:
-        preset = {
+    preset = {
             "a_n": 16, "a_dP": 71.501, "a_race": "outer", "a_rpm": 2000,
             "a_dB": 8.4074, "a_theta": 15.17, "a_L": 3.8, "a_N": 5,
             "a_lambda": "0.7 0.7 0.8 0.8 0.8", "a_delta": "0.5 0 0.5 0 0.7",
@@ -87,7 +84,7 @@ def main():
         # Dataset preset selector
         st.header("Select Dataset Preset")
         dataset = st.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
-
+        preset = presets.get(dataset, preset)
         st.header("Simulation Parameters")
         a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
         a_dP = st.number_input("Pitch diameter (dP) [mm]", value=preset["a_dP"])
