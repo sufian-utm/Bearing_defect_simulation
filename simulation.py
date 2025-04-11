@@ -105,10 +105,13 @@ def main():
 
     with st.expander("Bearing Specifications", expanded=True, icon=":material/settings:"):
         bearing_specs = {
-            "Number of rolling elements (n)": a_n,
-            "Pitch diameter (dP) [mm]": a_dP,
-            "Rolling element diameter (dB) [mm]": a_dB,
-            "Contact angle (θ) [deg]": a_theta
+            "Parameter": [
+                "Number of rolling elements (n)",
+                "Pitch diameter (dP) [mm]",
+                "Rolling element diameter (dB) [mm]",
+                "Contact angle (θ) [deg]"
+            ],
+            "Value": [a_n, a_dP, a_dB, a_theta]
         }
 
         #load data into a DataFrame object:
