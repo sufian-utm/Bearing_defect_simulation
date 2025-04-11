@@ -83,10 +83,11 @@ def main():
         }
 
     with st.sidebar:
-      
+        
         # Dataset preset selector
-        st.header("Select Dataset Preset")
-        dataset = st.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
+        with st.expander("Select Dataset Preset"):
+            dataset = st.radio("Choose a public dataset:", options=["Custom", "CWRU", "NASA", "Paderborn"])
+
         preset = presets[dataset] if dataset in presets else preset
         st.header("Simulation Parameters")
         a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
