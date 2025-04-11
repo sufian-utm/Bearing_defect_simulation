@@ -85,7 +85,7 @@ def main():
     with st.sidebar:
 
         # Dataset preset selector
-        with st.expander("Preset Value"):
+        with st.expander(f"Preset Value: {dataset if dataset else 'Preset'}"):
             dataset = st.radio("Select preset value:", options=["Custom", "CWRU", "NASA", "Paderborn"])
 
         preset = presets[dataset] if dataset in presets else preset
