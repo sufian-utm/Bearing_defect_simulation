@@ -88,7 +88,7 @@ def main():
             dataset = st.radio("Select preset value:", options=["Custom", "CWRU", "NASA", "Paderborn"])
 
         preset = presets[dataset] if dataset in presets else preset
-        st.header("Simulation Parameters")
+        st.header(f"Simulation Parameters {dataset}")
         a_n = st.number_input("Number of rolling elements (n)", min_value=1, value=preset["a_n"])
         a_dP = st.number_input("Pitch diameter (dP) [mm]", value=preset["a_dP"])
         a_race = st.selectbox("Defect on race", options=["inner", "outer"], index=0 if preset["a_race"] == "inner" else 1)
