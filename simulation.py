@@ -103,6 +103,19 @@ def main():
         a_frequency = st.number_input("Frequency (Hz)", value=preset["a_frequency"])
         a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=preset["a_noise"])
 
+    with st.expander("Baering Specifications", expanded=True, icon=":material/settings:"):
+        bearing_specs = {
+            "Number of rolling elements (n)": a_n,
+            "Pitch diameter (dP) [mm]": a_dP,
+            "Rolling element diameter (dB) [mm]": a_dB,
+            "Contact angle (θ) [deg]": a_theta
+        }
+
+        #load data into a DataFrame object:
+        df = pd.DataFrame(bearing_specs)
+
+        st.table(df)
+
     if st.button("Run Simulation"):
         try:
             # Safely parse and define these inside the button block
