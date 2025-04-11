@@ -85,8 +85,8 @@ def main():
     with st.sidebar:
 
         # Dataset preset selector
-        with st.expander("Select Dataset Preset"):
-            dataset = st.radio(options=["Custom", "CWRU", "NASA", "Paderborn"])
+        with st.expander("Preset Value"):
+            dataset = st.radio("Select preset value:", options=["Custom", "CWRU", "NASA", "Paderborn"])
 
         preset = presets[dataset] if dataset in presets else preset
         st.header("Simulation Parameters")
