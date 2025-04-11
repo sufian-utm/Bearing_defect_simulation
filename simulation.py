@@ -84,8 +84,15 @@ def main():
 
     with st.sidebar:
 
+        # Initialize dataset variable before using it
+        if 'dataset' not in st.session_state:
+            st.session_state.dataset = None
+
+        # Use the current session state or a fallback
+        current_dataset = st.session_state.dataset
+
         # Dataset preset selector
-        with st.expander(f"Preset Value: {dataset if dataset else 'Preset'}"):
+        with st.expander(f"Preset Value: {current_dataset or 'Custom'}"):
             dataset = st.radio("Select preset value:", options=["Custom", "CWRU", "NASA", "Paderborn"])
 
         preset = presets[dataset] if dataset in presets else preset
