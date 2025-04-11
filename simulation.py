@@ -51,13 +51,13 @@ def run_simulation(a_n, a_dP, a_race, a_rpm,
         return None
 
 def main():
-    st.title("🔧 Bearing Defect Vibration Simulation")
+    st.title("Bearing Vibration Simulation")
 
     # Define presets
     presets = {
         "CWRU": {
             "a_n": 9, "a_dP": 47, "a_race": "outer", "a_rpm": 1772,
-            "a_dB": 7.94, "a_theta": 15.0, "a_L": 0.4, "a_N": 3,
+            "a_dB": 6.75, "a_theta": 15.0, "a_L": 0.4, "a_N": 3,
             "a_lambda": "0.18 0.18 0.18", "a_delta": "0.28 0 0.28",
             "a_duration": 1.03, "a_frequency": 12000.0, "a_noise": 0.1
         },
