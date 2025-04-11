@@ -103,7 +103,7 @@ def main():
         a_frequency = st.number_input("Frequency (Hz)", value=preset["a_frequency"])
         a_noise = st.slider("Noise level", min_value=0.0, max_value=0.9, value=preset["a_noise"])
 
-    with st.expander("Baering Specifications", expanded=True, icon=":material/settings:"):
+    with st.expander("Bearing Specifications", expanded=True, icon=":material/settings:"):
         bearing_specs = {
             "Number of rolling elements (n)": a_n,
             "Pitch diameter (dP) [mm]": a_dP,
